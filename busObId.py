@@ -1,64 +1,37 @@
 import requests
 import json
 
-# Cherwell API endpoint URL
-url = "https://charter.cherwellondemand.com/CherwellClient/CherwellAPI/api/V1/savebusinessobject"
-# Cherwell API key
-api_key = "<api_key>"
+# Set the Cherwell API endpoint URL
+url = "https://<your_cherwell_instance>/CherwellAPI/api/V1/getbusinessobject/busobname/release"
 
-# Cherwell username and password
-username = "<username>"
-password = "<password>"
+# Set the Cherwell API credentials
+username = "<your_cherwell_username>"
+password = "<your_cherwell_password>"
+client_id = "<your_cherwell_client_id>"
+client_secret = "<your_cherwell_client_secret>"
 
-# Set the Release properties
-release = {
-    "busObId": "Release",
-    "fields": [
-        {"name": "Short Description", "value": "Providing Dummy Data for Testing purpose"},
-        {"name": "Requestor", "value": "annem, nageswara (P3214461)"},
-        {"name": "Request Group", "value": "Spectrum Mobile App Support"},
-        {"name": "Program", "value": "Spectrum Mobile 2.0"},
-        {"name": "Environment", "value": "QA"},
-        {"name": "Primary Application (CI)", "value": "SPECTRUM MOBILE 2.0 BACKOFFICE (SMBO M2) QA2"},
-        {"name": "Release Type", "value": "Code"},
-        {"name": "Type Of Testing- Required", "value": "Smoke Test only"},
-        {"name": "Deployment Description Summary", "value": "Defect Fixes"},
-        {"name": "Build", "value": "1.0.1"},
-        {"name": "Urgency", "value": "Low"},
-        {"name": "Urgency Reason", "value": "Defect Fixes"},
-        {"name": "Service Impact", "value": "Yes - Continuous"},
-        {"name": "Impacts to Orders in Procress", "value": "Yes"}
-    ],
-    "persist": True
-}
-
-# Set the headers for the Cherwell API request
+# Set the headers
 headers = {
     "Content-Type": "application/json",
     "Accept": "application/json",
-    "Authorization": "Bearer " + api_key
+    "Authorization": "Bearer <your_access_token>"
 }
 
-# Authenticate with the Cherwell API
+# Get the access token
+auth_url = "https://<your_cherwell_instance>/CherwellAPI/token"
 auth_data = {
     "grant_type": "password",
-    "client_id": "api_client",
     "username": username,
-    "password": password
+    "password": password,
+    "client_id": client_id,
+    "client_secret": client_secret
 }
-auth_url = "https://<base_uri>/CherwellAPI/token"
 auth_response = requests.post(auth_url, data=auth_data)
-auth_response.raise_for_status()
-auth_json = auth_response.json()
-api_key = auth_json["access_token"]
+access_token = auth_response.json()["access_token"]
+headers["Authorization"] = f"Bearer {access_token}"
 
-# Set the headers for the Cherwell API request with the new API key
-headers["Authorization"] = "Bearer " + api_key
+# Fetch the Release busObId
+response = requests.get(url, headers=headers)
+busObId = response.json()["busObId"]
 
-# Create the new Release in Cherwell
-response = requests.post(url, headers=headers, data=json.dumps(release))
-response.raise_for_status()
-
-# Show the new business object record id
-print("RecId for new Release: {}".format(response.json()["busObRecId"]))
-print("PublicId for new Release: {}".format(response.json()["busObPublicId"]))
+print(f"The busObId for Release is {busObId}")
