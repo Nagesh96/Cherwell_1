@@ -2,7 +2,7 @@ import requests
 import base64
 
 def check_cherwell_connection(api_url, username, password):
-    # Endpoint for a basic Cherwell API call (you might want to adjust this based on Cherwell's API)
+    # Endpoint for a basic Cherwell API call
     endpoint = f"{api_url}/api/V1/heartbeat"
 
     # Set up headers with content type and authorization
@@ -29,28 +29,39 @@ def create_new_release(api_url, username, password):
 
     # Set the Cherwell business object properties for the new release
     new_release = {
-        "busObId": "your_busObId",
+        "busObId": "Release",
         "fields": [
             {
                 "dirty": True,
-                "fieldId": "your_fieldId",
-                "value": "your_value"
+                "fieldId": "Short Description",
+                "value": "Dummy Data"
             },
             {
                 "dirty": True,
-                "fieldId": "your_fieldId",
-                "value": "your_value"
+                "fieldId": "Requestor",
+                "value": "Nageswara,annem (P3214461)"
             },
             {
                 "dirty": True,
-                "fieldId": "your_fieldId",
-                "value": "your_value"
+                "fieldId": "Environment",
+                "value": "QA"
+            },
+            {
+                "dirty": True,
+                "fieldId": "Program",
+                "value": "Spectrum Mobile 2.0"
+            },
+            {
+                "dirty": True,
+                "fieldId": "Request Group",
+                "value": "Spectrum Mobile App Support"
             }
         ]
     }
 
-    # Endpoint for creating a new release (adjust based on Cherwell's API)
-    create_endpoint = f"{api_url}/api/V1/your_create_release_endpoint"
+    # Endpoint for creating a new release
+    #create_endpoint = f"{api_url}/api/V1/your_create_release_endpoint"
+    create_endpoint = f"{api_url}/api/V1/savebusinessobject"
 
     # Set up headers with content type and authorization
     headers = {
@@ -83,7 +94,7 @@ def get_authorization_header(username, password):
     return f"Basic {encoded_credentials}"
 
 # Example usage
-api_url = ""  # Adjust the URL
+api_url = "https://charter.cherwellondemand.com/CherwellClient/CherwellAPI"
 username = ""
 password = ""
 
