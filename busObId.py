@@ -14,5 +14,6 @@ if response.status_code == 200:
         print(f"BusObId of Release: {bus_ob_id}")
     except ValueError as e:
         print(f"Error decoding JSON: {e}")
+        print("Response content:", response.content)
 else:
     print(f"Error: {response.status_code} - {response.text}")
