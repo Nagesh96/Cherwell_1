@@ -17,3 +17,4 @@ if response.status_code == 200:
         print("Response content:", response.content)
 else:
     print(f"Error: {response.status_code} - {response.text}")
+    print("Response content:", response.content)
