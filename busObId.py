@@ -1,33 +1,15 @@
 import requests
+from requests.auth import HTTPBasicAuth
 
-# Replace these values with your Cherwell instance details
-cherwell_url = "https://your-cherwell-instance/api/V1"
-cherwell_username = "your_username"
-cherwell_password = "your_password"
+url = "https://cherwell_instance/api/V1/getbusinessobject/busobname/Release"
+username = "your_username"
+password = "your_password"
 
-# Authentication
-auth_endpoint = f"{cherwell_url}/auth/token"
-auth_data = {"username": cherwell_username, "password": cherwell_password}
-auth_response = requests.post(auth_endpoint, json=auth_data)
+response = requests.get(url, auth=HTTPBasicAuth(username, password))
 
-# Print the raw response for debugging
-print(f"Authentication Response: {auth_response.text}")
-
-# Check if the authentication was successful
-if auth_response.status_code == 200:
-    auth_token = auth_response.json().get("access_token")
-
-    # Get the busObId for the "Release" business object type
-    bus_obj_endpoint = f"{cherwell_url}/busobinfo"
-    bus_obj_query = {"busObName": "Release"}
-
-    headers = {"Authorization": f"Bearer {auth_token}"}
-    bus_obj_response = requests.get(bus_obj_endpoint, params=bus_obj_query, headers=headers)
-    bus_obj_info = bus_obj_response.json()
-
-    # Extract the busObId
-    busObId = bus_obj_info.get("busObId")
-
-    print(f"busObId for 'Release': {busObId}")
+if response.status_code == 200:
+    release_data = response.json()
+    bus_ob_id = release_data.get("busObId", "")
+    print(f"BusObId of Release: {bus_ob_id}")
 else:
-    print(f"Authentication failed with status code: {auth_response.status_code}")
+    print(f"Error: {response.status_code} - {response.text}")
